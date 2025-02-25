@@ -1,0 +1,68 @@
+﻿@model Service.DTO.NewsDetailViewModel
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">@Model.CategoryName</a></li>
+            <li class="breadcrumb-item active">@Model.NewsTitle</li>
+        </ol>
+    </nav>
+
+    <article class="news-detail">
+        <header class="mb-4">
+            <h1 class="display-4">@Model.NewsTitle</h1>
+            <div class="meta text-muted mb-3">
+                <span><i class="fas fa-user"></i> @Model.CreatedByName</span>
+                <span class="mx-2">|</span>
+                <span><i class="fas fa-calendar"></i> @Model.CreatedDate?.ToString("MMMM dd, yyyy")</span>
+                <span class="mx-2">|</span>
+                <span><i class="fas fa-folder"></i> @Model.CategoryName</span>
+            </div>
+        </header>
+
+        <div class="lead mb-4">
+            @Model.Headline
+        </div>
+
+        <div class="news-content mb-4">
+            @Html.Raw(Model.NewsContent)
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.NewsSource))
+        {
+            <div class="source text-muted mb-4">
+                Source: @Model.NewsSource
+            </div>
+        }
+
+        @if (Model.Tags != null && Model.Tags.Any())
+        {
+            <div class="tags mb-4">
+                @foreach (var tag in Model.Tags)
+                {
+                    <a href="#" class="badge badge-secondary mr-1">@tag</a>
+                }
+            </div>
+        }
+    </article>
+
+</div>
+
+@section Styles {
+    <style>
+        .news-detail .meta span {
+            font-size: 0.9rem;
+        }
+
+        .news-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .tags .badge {
+            font-size: 0.9rem;
+            padding: 0.5em 1em;
+        }
+    </style>
+}

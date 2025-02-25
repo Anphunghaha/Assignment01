@@ -1,0 +1,36 @@
+﻿<div class="form-group">
+    <label for="startDate">Start Date</label>
+    <input type="date" class="form-control" id="startDate" name="startDate" required>
+</div>
+<div class="form-group">
+    <label for="endDate">End Date</label>
+    <input type="date" class="form-control" id="endDate" name="endDate" required>
+</div>
+<button onclick="showReport()" type="button" class="btn btn-primary">Generate Report</button>
+
+<div id="reportResult"></div>
+@section Scripts {
+    <script>
+        function showReport() {
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            $.ajax({
+                url: '/Report/GenerateReport', // URL của action
+                type: 'GET',
+                data: {
+                    startDate: startDate,
+                    endDate: endDate
+                },
+                success: function (response) {
+                    // Đưa kết quả trả về vào phần tử có id="reportResult"
+                    $('#reportResult').html(response);
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi
+                    console.error('Error:', error);
+                    $('#reportResult').html('<div class="alert alert-danger">An error occurred while generating the report.</div>');
+                }
+            });
+        }
+    </script>
+}
