@@ -22,10 +22,9 @@ namespace Service.DTO
 
         public int? AccountRole { get; set; }
 
-        [Required]
-        [StringLength(20, MinimumLength = 8)]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,20}$",
-                ErrorMessage = "Mật khẩu phải từ 8-20 ký tự. Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 ký tự đặc biệt.")]
-        public string AccountPassword { get; set; }
+        //[StringLength(20, MinimumLength = 8)]
+        //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,20}$",
+        //        ErrorMessage = "Mật khẩu phải từ 8-20 ký tự. Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 ký tự đặc biệt.")]
+        public string? AccountPassword { get; set; }
     }
 }

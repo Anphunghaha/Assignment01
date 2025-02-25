@@ -1,0 +1,161 @@
+﻿@model Service.DTO.NewsArticleSearchViewModel
+
+<div class="modal fade" id="newsDetailModal" tabindex="-1" aria-labelledby="newsDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newsDetailModalLabel">News Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="newsDetailContent">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <h2>News Management</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <form method="get" class="row">
+                <div class="col-md-3 mb-2">
+                    <input type="text" name="searchTerm" class="form-control"
+                           placeholder="Search news" value="@Model.SearchTerm">
+                </div>
+                <div class="col-md-2 mb-2">
+                    <select name="categoryId" class="form-control" asp-items="Model.Categories">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <input type="date" name="fromDate" class="form-control"
+                           value="@Model.FromDate?.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-2 mb-2">
+                    <input type="date" name="toDate" class="form-control"
+                           value="@Model.ToDate?.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-2 mb-2">
+                    <div class="form-check">
+                        <input type="checkbox" name="activeOnly" class="form-check-input"
+                               value="true" @(Model.ActiveOnly == true ? "checked" : "")>
+                        <label class="form-check-label">Active Only</label>
+                    </div>
+                </div>
+                <div class="col-md-1 mb-2">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mb-3 text-right">
+        <a asp-action="Create" class="btn btn-success">Create New Article</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Created Date</th>
+                    <th>Status</th>
+                    <th>Tags</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var news in Model.NewsArticles)
+                {
+                    <tr>
+                        <td>
+                            <div class="font-weight-bold">@news.NewsTitle</div>
+                            <small class="text-muted">@news.Headline</small>
+                        </td>
+                        <td>@news.CategoryName</td>
+                        <td>@news.CreatedDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <span class="badge text-@(news.NewsStatus ? "success" : "danger")">
+                                @(news.NewsStatus ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            @foreach (var tag in news.TagNames)
+                            {
+                                <span class="badge text-warning mr-1">@tag</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-success"
+                                        onclick="showNewsDetails('@news.NewsArticleID')">
+                                    Show
+                                </button>
+                                <a asp-action="Edit" asp-route-id="@news.NewsArticleID"
+                                   class="btn btn-sm btn-primary">Edit</a>
+                                <button type="button" class="btn btn-sm btn-danger"
+                                        onclick="confirmDelete('@news.NewsArticleID')">
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(id) {
+            if (confirm('Are you sure you want to delete this article?')) {
+                document.getElementById('deleteForm').action = '/NewsManagement/Delete/' + id;
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+    <script>
+        function showNewsDetails(newsArticleID) {
+            // Send AJAX request to server
+            $.ajax({
+                url: '/News/GetNewsDetail', // Update this URL to match your server endpoint
+                type: 'GET',
+                data: { id: newsArticleID },
+                success: function (data) {
+                    // Populate the modal with the received data
+                    $('#newsDetailContent').html(data);
+
+                    // Show the modal
+                    $('#newsDetailModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error('Error fetching news details:', error);
+                    alert('An error occurred while fetching news details.');
+                }
+            });
+        }
+    </script>
+    <form id="deleteForm" method="post" style="display: none;">
+        @Html.AntiForgeryToken()
+    </form>
+}

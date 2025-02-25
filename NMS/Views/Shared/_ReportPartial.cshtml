@@ -1,0 +1,51 @@
+﻿@model Service.DTO.ReportViewModel
+
+<h2>Report from @Model.StartDate.ToShortDateString() to @Model.EndDate.ToShortDateString()</h2>
+
+<h3>Summary</h3>
+<p>Total Articles: @Model.TotalArticles</p>
+<p>Active Articles: @Model.ActiveArticles</p>
+<p>Inactive Articles: @Model.InactiveArticles</p>
+
+<h3>Articles by Category</h3>
+<ul>
+    @foreach (var category in Model.ArticlesByCategory)
+    {
+        <li>@category.Key: @category.Value</li>
+    }
+</ul>
+
+<h3>Articles by Staff</h3>
+<ul>
+    @foreach (var staff in Model.ArticlesByStaff)
+    {
+        <li>@staff.Key: @staff.Value</li>
+    }
+</ul>
+
+<h3>Tags : @Model.CountTag</h3>
+
+<h3>Article List</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Created Date</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Created By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var article in Model.Articles)
+        {
+            <tr>
+                <td>@article.NewsTitle</td>
+                <td>@article.CreatedDate?.ToShortDateString()</td>
+                <td>@article?.Category?.CategoryName</td>
+                <td>@((article?.NewsStatus ?? false) ? "Active" : "Inactive")</td>
+                <td>@article?.CreatedBy?.AccountName</td>
+            </tr>
+        }
+    </tbody>
+</table>
