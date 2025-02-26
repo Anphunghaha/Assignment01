@@ -11,5 +11,7 @@ namespace Service.DTO
         public string SearchTerm { get; set; }
         public int? RoleFilter { get; set; }
         public IEnumerable<AccountViewModel> Accounts { get; set; }
+        public string SortOrder { get; set; }
+
     }
 }

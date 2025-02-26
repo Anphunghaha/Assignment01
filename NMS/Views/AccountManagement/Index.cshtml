@@ -49,8 +49,16 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@(Model.SortOrder == "name_asc" ? "name_desc" : "name_asc")">
+                        Name
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@(Model.SortOrder == "email_asc" ? "email_desc" : "email_asc")">
+                        Email
+                    </a>
+                </th>
                 <th>Role</th>
                 <th>Actions</th>
             </tr>

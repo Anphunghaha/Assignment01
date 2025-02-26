@@ -15,16 +15,30 @@ namespace NMS.Controllers
             _accountService = accountService;
         }
 
-        public async Task<IActionResult> Index(string searchTerm, int? roleFilter)
+        public async Task<IActionResult> Index(string searchTerm, int? roleFilter, string sortOrder)
         {
+            var accounts = await _accountService.SearchAccountsAsync(searchTerm, roleFilter);
+
+            // Sắp xếp theo sortOrder
+            accounts = sortOrder switch
+            {
+                "name_desc" => accounts.OrderByDescending(a => a.AccountName).ToList(),
+                "email_asc" => accounts.OrderBy(a => a.AccountEmail).ToList(),
+                "email_desc" => accounts.OrderByDescending(a => a.AccountEmail).ToList(),
+                _ => accounts.OrderBy(a => a.AccountName).ToList(), // Mặc định sắp xếp theo Name (A-Z)
+            };
+
             var viewModel = new AccountSearchViewModel
             {
                 SearchTerm = searchTerm,
                 RoleFilter = roleFilter,
-                Accounts = await _accountService.SearchAccountsAsync(searchTerm, roleFilter)
+                SortOrder = sortOrder,
+                Accounts = accounts
             };
+
             return View(viewModel);
         }
+
 
         public IActionResult Create()
         {
