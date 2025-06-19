@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTO;
 using Service.Interface;
@@ -17,7 +18,7 @@ namespace API.Controllers
         }
 
         // GET: api/Category
-        [HttpGet]
+        [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
             var categories = await _categoryService.GetAllCategoryAsync();
@@ -47,7 +48,8 @@ namespace API.Controllers
         }
 
         // GET: api/Category/{id}
-        [HttpGet("{id}")]
+        [Authorize(Policy = "RequireStaffRole")]
+        [HttpGet("get-by-id/{id}")]
         public async Task<IActionResult> GetById(short id)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);
@@ -58,7 +60,8 @@ namespace API.Controllers
         }
 
         // POST: api/Category
-        [HttpPost]
+        [Authorize(Policy = "RequireStaffRole")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CategoryViewModel model)
         {
             if (!ModelState.IsValid)
@@ -72,13 +75,13 @@ namespace API.Controllers
         }
 
         // PUT: api/Category/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(short id, [FromBody] CategoryViewModel model)
+        [Authorize(Policy = "RequireStaffRole")]
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] CategoryViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            model.CategoryID = id;
             var result = await _categoryService.UpdateCategoryAsync(model);
             if (!result.Success)
                 return BadRequest(result);
@@ -87,6 +90,7 @@ namespace API.Controllers
         }
 
         // DELETE: api/Category/{id}
+        [Authorize(Policy = "RequireStaffRole")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(short id)
         {

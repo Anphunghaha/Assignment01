@@ -86,7 +86,17 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(c =>
+{
+    c.AddPolicy("RequireAdminRole", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+    c.AddPolicy("RequireStaffRole", policy =>
+    {
+        policy.RequireRole("1");
+    });
+});
 
 // Admin Config
 builder.Services.Configure<AdminConfiguration>(builder.Configuration.GetSection("AdminAccount"));

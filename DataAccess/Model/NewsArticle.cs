@@ -32,5 +32,4 @@ public partial class NewsArticle
     public virtual SystemAccount? CreatedBy { get; set; }
 
     public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
-    public int? UpdatedBy { get; set; }
 }

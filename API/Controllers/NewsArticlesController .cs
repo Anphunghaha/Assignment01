@@ -35,8 +35,8 @@ namespace API.Controllers
         }
 
         // POST: api/NewsArticles
-        [HttpPost]
-        [Authorize] // JWT required
+        [Authorize(Policy = "RequireStaffRole")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] NewsArticleViewModel model)
         {
             var result = await _newsArticleService.CreateNewsAsync(model);
@@ -45,19 +45,18 @@ namespace API.Controllers
         }
 
         // PUT: api/NewsArticles/{id}
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Update(string id, [FromBody] NewsArticleViewModel model)
+        [Authorize(Policy = "RequireStaffRole")]
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] NewsArticleViewModel model)
         {
-            model.NewsArticleID = id;
             var result = await _newsArticleService.UpdateAsync(model);
             if (!result.Success) return BadRequest(result);
             return Ok(result);
         }
 
         // DELETE: api/NewsArticles/{id}
-        [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Policy = "RequireStaffRole")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _newsArticleService.DeleteAsync(id);
