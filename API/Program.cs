@@ -136,8 +136,8 @@ IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
 
-    var newsArticle = builder.EntitySet<NewsArticleViewModel>("NewsArticles").EntityType;
-    newsArticle.HasKey(n => n.NewsArticleID);
+    var newsArticle = builder.EntitySet<NewsArticle>("NewsArticles").EntityType;
+    //newsArticle.HasKey(n => n.NewsArticleID);
 
     var category = builder.EntitySet<CategoryViewModel>("Categories").EntityType;
     category.HasKey(c => c.CategoryID); // hoặc tên thuộc tính khóa của CategoryViewModel
