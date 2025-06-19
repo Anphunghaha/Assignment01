@@ -39,7 +39,6 @@ namespace Repository.Implement
                 .Include(n => n.Category)
                 .Include(n => n.CreatedBy)
                 .Include(n => n.Tags)
-                    .ThenInclude(nt => nt.NewsArticles)
                 .OrderByDescending(n => n.CreatedDate)
                 .ToListAsync();
         }

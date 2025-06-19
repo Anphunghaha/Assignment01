@@ -18,7 +18,7 @@ namespace API.Controllers
         }
 
         // GET: api/NewsArticles
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _newsArticleService.GetAllAsync();
