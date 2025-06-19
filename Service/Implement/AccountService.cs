@@ -232,6 +232,37 @@ namespace Service.Implement
             return new ServiceResult { Success = true, Message = "Password changed successfully" };
         }
 
+        // phần cho API 
+        public async Task<(ClaimsPrincipal? principal, SystemAccount? account)> GetClaimsPrincipalForLoginAsync(string email, string password)
+        {
+            if (email == _adminConfig.Email && password == _adminConfig.Password)
+            {
+                var adminClaims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, _adminConfig.Name),
+            new Claim(ClaimTypes.Email, _adminConfig.Email),
+            new Claim(ClaimTypes.Role, "Admin")
+        };
+                var identity = new ClaimsIdentity(adminClaims, "Jwt");
+                var principal = new ClaimsPrincipal(identity);
+                return (principal, null); // Admin không có trong DB
+            }
+
+            var isValid = await _accountRepository.ValidateCredentialsAsync(email, password);
+            if (!isValid) return (null, null);
+
+            var user = await _accountRepository.GetByEmailAsync(email);
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.AccountName),
+        new Claim(ClaimTypes.Email, user.AccountEmail),
+        new Claim(ClaimTypes.Role, user.AccountRole.ToString()),
+        new Claim("AccountId", user.AccountId.ToString())
+    };
+            var identityUser = new ClaimsIdentity(claims, "Jwt");
+            var principalUser = new ClaimsPrincipal(identityUser);
+            return (principalUser, user);
+        }
 
     }
 }

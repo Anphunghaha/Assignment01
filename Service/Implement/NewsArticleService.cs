@@ -1,4 +1,5 @@
 ﻿using DataAccess.Model;
+using Repository.Implement;
 using Repository.Interface;
 using Service.DTO;
 using Service.Helper;
@@ -52,6 +53,7 @@ namespace Service.Implement
         {
             return newsArticleRepository.GetAllAsync();
         }
+
 
         public async Task<NewsArticleViewModel?> GetByIdAsync(string id)
         {
@@ -236,5 +238,8 @@ namespace Service.Implement
                 ModifiedDate = news.ModifiedDate
             };
         }
+
+
+        }
     }
-}
+

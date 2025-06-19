@@ -1,6 +1,7 @@
 ﻿using DataAccess.Model;
 using Service.DTO;
 using Service.Helper;
+using System.Security.Claims;
 
 namespace Service.Interface
 {
@@ -21,5 +22,8 @@ namespace Service.Interface
         Task<ProfileViewModel?> GetUserProfileAsync(int accountId);
         Task<ServiceResult> UpdateProfileAsync(ProfileViewModel model);
         Task<ServiceResult> ChangePasswordAsync(int accountId, string currentPassword, string newPassword);
+        // phần cho api 
+        Task<(ClaimsPrincipal? principal, SystemAccount? account)> GetClaimsPrincipalForLoginAsync(string email, string password);
+
     }
 }

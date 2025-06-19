@@ -9,6 +9,7 @@ namespace Service.DTO
 {
     public class NewsArticleViewModel
     {
+        [Key]
         public string? NewsArticleID { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
